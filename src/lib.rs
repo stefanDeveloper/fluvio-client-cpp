@@ -4,6 +4,7 @@ pub mod config;
 pub mod consumer;
 pub mod produce_output;
 pub mod producer;
+pub mod c_api;
 
 #[cxx::bridge]
 mod ffi {

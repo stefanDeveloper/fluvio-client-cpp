@@ -65,3 +65,12 @@ target_link_libraries(test_config PRIVATE
     pthread dl m
 )
 add_test(NAME fluvio_config_test COMMAND test_config)
+
+# Pure C Native Test
+add_executable(test_c tests/test_c.c)
+target_include_directories(test_c PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(test_c PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp_sys.a
+    stdc++ pthread dl m
+)
+add_test(NAME fluvio_c_native_test COMMAND test_c)
