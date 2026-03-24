@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(fluvio_client_cpp_sys CXX C)
+project(fluvio_client_cpp CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
