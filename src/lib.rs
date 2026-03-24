@@ -11,7 +11,6 @@ mod ffi {
     extern "Rust" {
         type FluvioClient;
         type FluvioProducer;
-        type FluvioConsumer;
         type FluvioStream;
         type FluvioRecord;
 
@@ -65,14 +64,10 @@ mod ffi {
         /// Blocks and waits for the producer record confirmation
         fn produce_output_wait(output: &mut FluvioProduceOutput) -> Result<Box<FluvioRecordMetadata>>;
 
-        /// Creates a consumer for the specified topic and partition
-        fn partition_consumer(client: &FluvioClient, topic: &str, partition: u32) -> Result<Box<FluvioConsumer>>;
         /// Creates a continuous stream for the consumer starting from the given offset index (0=Beginning, -1=End)
-        fn consumer_stream(consumer: &FluvioConsumer, offset_index: i64) -> Result<Box<FluvioStream>>;
+        fn consumer_stream(client: &FluvioClient, topic: &str, partition: u32, offset_index: i64) -> Result<Box<FluvioStream>>;
         /// Retrieves the next record from the stream blocks until available
         fn stream_next(stream: &mut FluvioStream) -> Result<Box<FluvioRecord>>;
-        /// Creates a consumer stream with custom configuration applied
-        fn consumer_with_config(client: &FluvioClient, topic: &str, partition: u32, config: &ConsumerConfigWrapper) -> Result<Box<FluvioStream>>;
         /// Retrieves the payload value byte array from a fetched record
         fn record_value(record: &FluvioRecord) -> Vec<u8>;
         /// Retrieves the key byte array from a fetched record

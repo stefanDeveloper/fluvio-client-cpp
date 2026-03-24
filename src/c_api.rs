@@ -1,6 +1,6 @@
 use crate::client::{FluvioClient, fluvio_connect};
 use crate::producer::{FluvioProducer, create_producer, producer_send, producer_flush};
-use crate::consumer::{FluvioConsumer, FluvioStream, FluvioRecord, partition_consumer, consumer_stream, stream_next};
+use crate::consumer::{FluvioStream, FluvioRecord, consumer_stream, stream_next};
 use crate::produce_output::{FluvioProduceOutput, produce_output_wait};
 use crate::config::{FluvioConfigWrapper, fluvio_config_load};
 use std::os::raw::c_char;
@@ -147,19 +147,10 @@ pub unsafe extern "C" fn fluvio_c_config_set_tls_file_paths(config: *mut fluvio_
 }
 
 #[unsafe(no_mangle)]
-pub extern "C" fn fluvio_c_partition_consumer(client: *mut FluvioClient, topic: *const c_char, partition: u32, out_consumer: *mut *mut FluvioConsumer) -> i32 {
-    if client.is_null() || topic.is_null() || out_consumer.is_null() { return -1; }
+pub extern "C" fn fluvio_c_consumer_stream(client: *mut FluvioClient, topic: *const c_char, partition: u32, offset_index: i64, out_stream: *mut *mut FluvioStream) -> i32 {
+    if client.is_null() || topic.is_null() || out_stream.is_null() { return -1; }
     let topic_str = unsafe { CStr::from_ptr(topic).to_str() }.unwrap_or("");
-    match partition_consumer(unsafe { &*client }, topic_str, partition) {
-        Ok(consumer) => { unsafe { *out_consumer = Box::into_raw(consumer); } 0 }
-        Err(_) => -1,
-    }
-}
-
-#[unsafe(no_mangle)]
-pub extern "C" fn fluvio_c_consumer_stream(consumer: *mut FluvioConsumer, offset_index: i64, out_stream: *mut *mut FluvioStream) -> i32 {
-    if consumer.is_null() || out_stream.is_null() { return -1; }
-    match consumer_stream(unsafe { &*consumer }, offset_index) {
+    match consumer_stream(unsafe { &*client }, topic_str, partition, offset_index) {
         Ok(stream) => { unsafe { *out_stream = Box::into_raw(stream); } 0 }
         Err(_) => -1,
     }
@@ -192,7 +183,3 @@ pub extern "C" fn fluvio_c_stream_free(stream: *mut FluvioStream) {
     if !stream.is_null() { unsafe { let _ = Box::from_raw(stream); } }
 }
 
-#[unsafe(no_mangle)]
-pub extern "C" fn fluvio_c_consumer_free(consumer: *mut FluvioConsumer) {
-    if !consumer.is_null() { unsafe { let _ = Box::from_raw(consumer); } }
-}

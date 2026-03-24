@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(fluvio_client_cpp CXX C)
+project(fluvio_client_cpp_sys CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,11 +15,12 @@ execute_process(
 
 set(RUST_TARGET_DIR "target/debug")
 file(GLOB_RECURSE CXXBRIDGE_HEADERS "${RUST_TARGET_DIR}/build/*lib.rs.h")
-file(GLOB_RECURSE CXXBRIDGE_SOURCES "${RUST_TARGET_DIR}/build/*lib.rs.cc")
+file(GLOB_RECURSE CXXBRIDGE_SOURCES_ALL "${RUST_TARGET_DIR}/build/*lib.rs.cc")
 file(GLOB_RECURSE CXX_CORE_HEADER "${RUST_TARGET_DIR}/build/*/cxx.h")
 file(GLOB RUST_STATIC_LIB "${RUST_TARGET_DIR}/libfluvio*.a")
 list(GET RUST_STATIC_LIB 0 FLUVIO_STATIC_LIB)
 
+list(GET CXXBRIDGE_SOURCES_ALL 0 CXXBRIDGE_SOURCES)
 list(GET CXXBRIDGE_HEADERS 0 CXXBRIDGE_HEADER)
 get_filename_component(CXXBRIDGE_HDR_DIR ${CXXBRIDGE_HEADER} DIRECTORY)
 list(GET CXX_CORE_HEADER 0 CXX_CORE_HDR)
