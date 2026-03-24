@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ libssl-dev pkg-config
+
+    - name: Install Fluvio Local Cluster
+      run: |
+        curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
+        echo "$HOME/.fluvio/bin" >> $GITHUB_PATH
+
+    - name: Start Fluvio Cluster
+      run: |
+        fluvio cluster start --local
+
+    - name: Build C++ Client
+      run: |
+        cmake -B build
+        cmake --build build
+
+    - name: Run Tests
+      run: |
+        cd build
+        ctest --output-on-failure

@@ -1,0 +1,47 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build_release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Build C++ Sys Library
+      run: |
+        cargo build --release
+
+    - name: Package Release Tarball
+      run: |
+        mkdir -p fluvio-client-cpp-linux-x64/lib
+        mkdir -p fluvio-client-cpp-linux-x64/include/fluvio-client-cpp-sys/src
+        mkdir -p fluvio-client-cpp-linux-x64/include/rust
+        
+        # Copy static library
+        cp target/release/libfluvio_client_cpp_sys.a fluvio-client-cpp-linux-x64/lib/
+        
+        # Find and copy generated headers
+        find target/release/build -name 'lib.rs.h' -exec cp {} fluvio-client-cpp-linux-x64/include/fluvio-client-cpp-sys/src/ \;
+        find target/release/build -name 'cxx.h' -exec cp {} fluvio-client-cpp-linux-x64/include/rust/ \;
+        
+        # Add CMake config
+        cp fluvio_client_cppConfig.cmake fluvio-client-cpp-linux-x64/
+
+        tar -czvf fluvio-client-cpp-linux-x64.tar.gz fluvio-client-cpp-linux-x64/
+
+    - name: Upload Release Asset
+      uses: softprops/action-gh-release@v1
+      with:
+        files: fluvio-client-cpp-linux-x64.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
