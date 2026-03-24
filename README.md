@@ -93,7 +93,7 @@ int main() {
 
 This project uses [CXX](https://cxx.rs) to safely wrap the underlying asynchronous Rust Fluvio crate into native synchronous C++ headers.
 
-For binary distribution, GitHub Actions compiles the Rust library (`libfluvio_client_cpp_sys.a`) and creates a release tarball. The included `vcpkg-port` simply downloads this artifact, bypassing Rust compilation entirely for the end user.
+For binary distribution, GitHub Actions compiles the Rust library (`libfluvio_client_cpp.a`) and creates a release tarball. The included `vcpkg-port` simply downloads this artifact, bypassing Rust compilation entirely for the end user.
 
 To compile from source locally, ensure you have Rust installed and run:
 

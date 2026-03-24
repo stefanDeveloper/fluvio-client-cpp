@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(fluvio_client_cpp_sys CXX C)
+project(fluvio_client_cpp CXX C)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -31,7 +31,7 @@ target_include_directories(test_producer PRIVATE
     ${CXX_ROOT_DIR}
 )
 target_link_libraries(test_producer PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp_sys.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp.a
     pthread dl m
 )
 add_test(NAME fluvio_producer_test COMMAND test_producer)
@@ -43,7 +43,7 @@ target_include_directories(test_consumer PRIVATE
     ${CXX_ROOT_DIR}
 )
 target_link_libraries(test_consumer PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp_sys.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp.a
     pthread dl m
 )
 add_test(NAME fluvio_consumer_test COMMAND test_consumer)
@@ -52,7 +52,7 @@ add_test(NAME fluvio_consumer_test COMMAND test_consumer)
 add_executable(test_admin tests/test_admin.cpp ${CXXBRIDGE_SOURCES})
 target_include_directories(test_admin PRIVATE ${CXXBRIDGE_HDR_DIR}/../.. ${CXX_ROOT_DIR})
 target_link_libraries(test_admin PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp_sys.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp.a
     pthread dl m
 )
 add_test(NAME fluvio_admin_test COMMAND test_admin)
@@ -61,7 +61,7 @@ add_test(NAME fluvio_admin_test COMMAND test_admin)
 add_executable(test_config tests/test_config.cpp ${CXXBRIDGE_SOURCES})
 target_include_directories(test_config PRIVATE ${CXXBRIDGE_HDR_DIR}/../.. ${CXX_ROOT_DIR})
 target_link_libraries(test_config PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp_sys.a
+    ${CMAKE_CURRENT_SOURCE_DIR}/${RUST_TARGET_DIR}/libfluvio_client_cpp.a
     pthread dl m
 )
 add_test(NAME fluvio_config_test COMMAND test_config)

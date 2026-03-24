@@ -20,7 +20,7 @@ foreach(HEADER ${HEADERS})
 endforeach()
 
 # Install libs
-file(INSTALL "${SOURCE_PATH}/lib/libfluvio_client_cpp_sys.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+file(INSTALL "${SOURCE_PATH}/lib/libfluvio_client_cpp.a" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
 
 # Install CMake config
 file(INSTALL "${SOURCE_PATH}/fluvio_client_cppConfig.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/fluvio_client_cpp")
