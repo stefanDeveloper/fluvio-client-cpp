@@ -1,0 +1,18 @@
+[package]
+name = "fluvio-client-cpp-sys"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["staticlib", "rlib"]
+
+[dependencies]
+cxx = "1.0.194"
+fluvio = { version = "0.50.1", features = ["admin", "rustls"] }
+fluvio-future = { version = "0.8.3", features = ["task", "io"] }
+fluvio-types = "0.50.1"
+fluvio-sc-schema = "0.50.1"
+futures-util = "0.3.31"
+
+[build-dependencies]
+cxx-build = "1.0.194"
