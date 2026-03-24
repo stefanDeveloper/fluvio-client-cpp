@@ -1,3 +1,5 @@
+#![allow(deprecated)]
+
 use fluvio::{PartitionConsumer, Offset, consumer::Record as NativeRecord};
 use fluvio_future::task::run_block_on;
 use futures_util::stream::StreamExt;
@@ -17,7 +19,6 @@ pub fn partition_consumer(client: &FluvioClient, topic: &str, partition: u32) ->
     run_block_on(client.inner.partition_consumer(topic, partition)).map(|c| Box::new(FluvioConsumer { inner: c })).map_err(|e| e.to_string())
 }
 
-#[allow(deprecated)]
 pub fn consumer_with_config(client: &FluvioClient, topic: &str, partition: u32, config: &ConsumerConfigWrapper) -> Result<Box<FluvioStream>, String> {
     let consumer = run_block_on(client.inner.partition_consumer(topic, partition)).map_err(|e| e.to_string())?;
     let built_config = config.inner.build().map_err(|e| e.to_string())?;

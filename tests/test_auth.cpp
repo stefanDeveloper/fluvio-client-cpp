@@ -11,7 +11,7 @@ int main() {
         const char* cert = std::getenv("FLUVIO_E2E_TLS_CERT");
         const char* ca = std::getenv("FLUVIO_E2E_TLS_CA");
 
-        auto fluvioConfig = fluvio_config_new(domain ? domain : "localhost:9003");
+        auto fluvioConfig = fluvio_config_new("localhost:9003");
 
         if (domain && key && cert && ca) {
             std::cout << "[E2E-AUTH] Active TLS parameters detected! Configuring strict mTLS execution pipeline." << std::endl;
