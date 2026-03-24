@@ -1,4 +1,4 @@
-#include "fluvio-client-cpp/src/lib.rs.h"
+#include "fluvio-client-cpp-sys/src/lib.rs.h"
 #include <iostream>
 #include <cstdlib>
 
@@ -38,8 +38,7 @@ int main() {
         std::cout << "[E2E-AUTH] 🔒 Payload shipped through TLS socket!" << std::endl;
 
         std::cout << "[E2E-AUTH] Bootstrapping Authenticated Consumer..." << std::endl;
-        auto consumer = partition_consumer(*authenticatedClient, "test-auth-topic", 0);
-        auto stream = consumer_stream(*consumer, 0); 
+        auto stream = consumer_stream(*authenticatedClient, "test-auth-topic", 0, 0); 
         auto rec = stream_next(*stream);
         auto val = record_value(*rec);
 
