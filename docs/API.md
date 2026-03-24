@@ -6,7 +6,7 @@ The Fluvio C++ Client provides extension bindings for working with the Fluvio st
 Creating a topic with default settings is as simple as:
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 #include <iostream>
 
 int main() {
@@ -20,7 +20,7 @@ int main() {
 Producing data to a topic in a Fluvio cluster:
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 #include "rust/cxx.h"
 #include <string>
 
@@ -56,7 +56,7 @@ auto producer = create_producer_with_config(*client, "a_topic", *config);
 Consuming events via streaming from an offset (e.g. `Offset::beginning` indexed via `0`):
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 #include <iostream>
 
 int main() {

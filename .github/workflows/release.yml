@@ -24,14 +24,14 @@ jobs:
     - name: Package Release Tarball
       run: |
         mkdir -p fluvio-client-cpp-linux-x64/lib
-        mkdir -p fluvio-client-cpp-linux-x64/include/fluvio-client-cpp-sys/src
+        mkdir -p fluvio-client-cpp-linux-x64/include/fluvio-client-cpp/src
         mkdir -p fluvio-client-cpp-linux-x64/include/rust
         
         # Copy static library
         cp target/release/libfluvio_client_cpp_sys.a fluvio-client-cpp-linux-x64/lib/
         
         # Find and copy generated headers
-        find target/release/build -name 'lib.rs.h' -exec cp {} fluvio-client-cpp-linux-x64/include/fluvio-client-cpp-sys/src/ \;
+        find target/release/build -name 'lib.rs.h' -exec cp {} fluvio-client-cpp-linux-x64/include/fluvio-client-cpp/src/ \;
         find target/release/build -name 'cxx.h' -exec cp {} fluvio-client-cpp-linux-x64/include/rust/ \;
         
         # Add CMake config

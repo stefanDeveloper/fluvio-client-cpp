@@ -34,7 +34,7 @@ target_link_libraries(main PRIVATE fluvio_client_cpp::fluvio_client_cpp)
 ## Creating a Topic
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 
 int main() {
     auto admin = fluvio_admin_connect();
@@ -46,7 +46,7 @@ int main() {
 ## Producer
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 #include "rust/cxx.h"
 #include <string>
 
@@ -70,7 +70,7 @@ int main() {
 ## Consumer
 
 ```cpp
-#include "fluvio-client-cpp-sys/src/lib.rs.h"
+#include "fluvio-client-cpp/src/lib.rs.h"
 #include <iostream>
 
 int main() {
