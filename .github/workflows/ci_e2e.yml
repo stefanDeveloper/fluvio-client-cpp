@@ -25,7 +25,7 @@ jobs:
 
     - name: Install Fluvio Local Cluster
       run: |
-        curl -fsS https://hub.infinyon.cloud/install/install.sh | bash
+        curl -fsS https://raw.githubusercontent.com/fluvio-community/fluvio/master/install.sh | FVM_VERSION=dev bash
         echo "$HOME/.fluvio/bin" >> $GITHUB_PATH
 
     - name: Generate mTLS Evaluation Certificates
