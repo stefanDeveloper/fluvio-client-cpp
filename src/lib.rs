@@ -22,9 +22,9 @@ mod ffi {
         type FluvioRecordMetadata;
         type FluvioAdminClient;
 
-        /// Connects to the Fluvio cluster using default configuration
+        /// Connects to a Fluvio cluster
         fn fluvio_connect() -> Result<Box<FluvioClient>>;
-        /// Connects to the Fluvio cluster using the provided configuration wrapper
+        /// Connects to a Fluvio cluster with explicit config
         fn fluvio_connect_with_config(config: &FluvioConfigWrapper) -> Result<Box<FluvioClient>>;
 
         /// Creates a new topic producer configuration builder
@@ -49,6 +49,10 @@ mod ffi {
         fn fluvio_config_set_endpoint(c: &mut FluvioConfigWrapper, endpoint: &str);
         /// Sets the client identifier for the cluster configuration
         fn fluvio_config_set_client_id(c: &mut FluvioConfigWrapper, client_id: &str);
+        fn fluvio_config_disable_tls(c: &mut FluvioConfigWrapper);
+        fn fluvio_config_set_anonymous_tls(c: &mut FluvioConfigWrapper);
+        fn fluvio_config_set_inline_tls(c: &mut FluvioConfigWrapper, domain: &str, key: &str, cert: &str, ca_cert: &str);
+        fn fluvio_config_set_tls_file_paths(c: &mut FluvioConfigWrapper, domain: &str, key_path: &str, cert_path: &str, ca_cert_path: &str);
 
         /// Creates a producer for the specified topic
         fn create_producer(client: &FluvioClient, topic: &str) -> Result<Box<FluvioProducer>>;

@@ -45,3 +45,29 @@ pub fn fluvio_config_set_endpoint(c: &mut FluvioConfigWrapper, endpoint: &str) {
 pub fn fluvio_config_set_client_id(c: &mut FluvioConfigWrapper, client_id: &str) {
     c.inner.client_id = Some(client_id.to_string());
 }
+
+pub fn fluvio_config_disable_tls(c: &mut FluvioConfigWrapper) {
+    c.inner.tls = fluvio::config::TlsPolicy::Disabled;
+}
+
+pub fn fluvio_config_set_anonymous_tls(c: &mut FluvioConfigWrapper) {
+    c.inner.tls = fluvio::config::TlsPolicy::Anonymous;
+}
+
+pub fn fluvio_config_set_inline_tls(c: &mut FluvioConfigWrapper, domain: &str, key: &str, cert: &str, ca_cert: &str) {
+    c.inner.tls = fluvio::config::TlsPolicy::Verified(fluvio::config::TlsConfig::Inline(fluvio::config::TlsCerts {
+        domain: domain.to_string(),
+        key: key.to_string(),
+        cert: cert.to_string(),
+        ca_cert: ca_cert.to_string(),
+    }));
+}
+
+pub fn fluvio_config_set_tls_file_paths(c: &mut FluvioConfigWrapper, domain: &str, key_path: &str, cert_path: &str, ca_cert_path: &str) {
+    c.inner.tls = fluvio::config::TlsPolicy::Verified(fluvio::config::TlsConfig::Files(fluvio::config::TlsPaths {
+        domain: domain.to_string(),
+        key: std::path::PathBuf::from(key_path),
+        cert: std::path::PathBuf::from(cert_path),
+        ca_cert: std::path::PathBuf::from(ca_cert_path),
+    }));
+}

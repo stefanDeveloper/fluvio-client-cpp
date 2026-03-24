@@ -15,9 +15,18 @@ typedef struct fluvio_consumer_opaque fluvio_partition_consumer_t;
 typedef struct fluvio_produce_output_opaque fluvio_produce_output_t;
 typedef struct fluvio_stream_opaque fluvio_stream_t;
 typedef struct fluvio_record_opaque fluvio_record_t;
+typedef struct fluvio_config_opaque fluvio_config_t;
 
 // Client
+int fluvio_c_config_load(fluvio_config_t** out_config);
+void fluvio_c_config_set_endpoint(fluvio_config_t* config, const char* endpoint);
+void fluvio_c_config_set_client_id(fluvio_config_t* config, const char* client_id);
+void fluvio_c_config_disable_tls(fluvio_config_t* config);
+void fluvio_c_config_set_anonymous_tls(fluvio_config_t* config);
+void fluvio_c_config_set_inline_tls(fluvio_config_t* config, const char* domain, const char* key, const char* cert, const char* ca_cert);
+void fluvio_c_config_set_tls_file_paths(fluvio_config_t* config, const char* domain, const char* key_path, const char* cert_path, const char* ca_cert_path);
 int fluvio_c_connect(fluvio_client_t** out_client);
+int fluvio_c_connect_with_config(fluvio_config_t* config, fluvio_client_t** out_client);
 void fluvio_c_client_free(fluvio_client_t* client);
 
 // Producer
