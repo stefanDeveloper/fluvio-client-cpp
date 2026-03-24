@@ -31,6 +31,9 @@ jobs:
         
         # Copy static library
         cp target/release/libfluvio_client_cpp.a fluvio-client-cpp-linux-x64/lib/
+
+        # Copy manual C/C++ Headers
+        cp -r include/* fluvio-client-cpp-linux-x64/include/
         
         # Find and copy generated headers
         find target/release/build -name 'lib.rs.h' -exec cp {} fluvio-client-cpp-linux-x64/include/fluvio-client-cpp/src/ \;

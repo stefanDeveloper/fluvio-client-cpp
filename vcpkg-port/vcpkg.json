@@ -1,6 +1,6 @@
 {
   "name": "fluvio-client-cpp",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Native C++ driver for Fluvio Streams",
   "homepage": "https://github.com/stefanDeveloper/fluvio-client-cpp",
   "dependencies": []
