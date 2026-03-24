@@ -1,4 +1,4 @@
-set(VERSION "0.1.0")
+set(VERSION "0.0.1")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/stefanDeveloper/fluvio-client-cpp/releases/download/v${VERSION}/fluvio-client-cpp-linux-x64.tar.gz"
