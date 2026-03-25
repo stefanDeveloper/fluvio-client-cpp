@@ -11,7 +11,6 @@ mod ffi {
     extern "Rust" {
         type FluvioClient;
         type FluvioProducer;
-        type FluvioConsumer;
         type FluvioStream;
         type FluvioRecord;
 
@@ -22,9 +21,9 @@ mod ffi {
         type FluvioRecordMetadata;
         type FluvioAdminClient;
 
-        /// Connects to the Fluvio cluster using default configuration
+        /// Connects to a Fluvio cluster
         fn fluvio_connect() -> Result<Box<FluvioClient>>;
-        /// Connects to the Fluvio cluster using the provided configuration wrapper
+        /// Connects to a Fluvio cluster with explicit config
         fn fluvio_connect_with_config(config: &FluvioConfigWrapper) -> Result<Box<FluvioClient>>;
 
         /// Creates a new topic producer configuration builder
@@ -49,6 +48,10 @@ mod ffi {
         fn fluvio_config_set_endpoint(c: &mut FluvioConfigWrapper, endpoint: &str);
         /// Sets the client identifier for the cluster configuration
         fn fluvio_config_set_client_id(c: &mut FluvioConfigWrapper, client_id: &str);
+        fn fluvio_config_disable_tls(c: &mut FluvioConfigWrapper);
+        fn fluvio_config_set_anonymous_tls(c: &mut FluvioConfigWrapper);
+        fn fluvio_config_set_inline_tls(c: &mut FluvioConfigWrapper, domain: &str, key: &str, cert: &str, ca_cert: &str);
+        fn fluvio_config_set_tls_file_paths(c: &mut FluvioConfigWrapper, domain: &str, key_path: &str, cert_path: &str, ca_cert_path: &str);
 
         /// Creates a producer for the specified topic
         fn create_producer(client: &FluvioClient, topic: &str) -> Result<Box<FluvioProducer>>;
@@ -61,14 +64,10 @@ mod ffi {
         /// Blocks and waits for the producer record confirmation
         fn produce_output_wait(output: &mut FluvioProduceOutput) -> Result<Box<FluvioRecordMetadata>>;
 
-        /// Creates a consumer for the specified topic and partition
-        fn partition_consumer(client: &FluvioClient, topic: &str, partition: u32) -> Result<Box<FluvioConsumer>>;
         /// Creates a continuous stream for the consumer starting from the given offset index (0=Beginning, -1=End)
-        fn consumer_stream(consumer: &FluvioConsumer, offset_index: i64) -> Result<Box<FluvioStream>>;
+        fn consumer_stream(client: &FluvioClient, topic: &str, partition: u32, offset_index: i64) -> Result<Box<FluvioStream>>;
         /// Retrieves the next record from the stream blocks until available
         fn stream_next(stream: &mut FluvioStream) -> Result<Box<FluvioRecord>>;
-        /// Creates a consumer stream with custom configuration applied
-        fn consumer_with_config(client: &FluvioClient, topic: &str, partition: u32, config: &ConsumerConfigWrapper) -> Result<Box<FluvioStream>>;
         /// Retrieves the payload value byte array from a fetched record
         fn record_value(record: &FluvioRecord) -> Vec<u8>;
         /// Retrieves the key byte array from a fetched record

@@ -28,14 +28,8 @@ int main() {
     fluvio_c_produce_output_free(out);
     fluvio_c_producer_flush(producer);
 
-    fluvio_partition_consumer_t* consumer = NULL;
-    if (fluvio_c_partition_consumer(client, "test-topic", 0, &consumer) != 0) {
-        printf("Failed to create consumer\n");
-        return 1;
-    }
-
     fluvio_stream_t* stream = NULL;
-    if (fluvio_c_consumer_stream(consumer, 0, &stream) != 0) {
+    if (fluvio_c_consumer_stream(client, "test-topic", 0, 0, &stream) != 0) {
         printf("Failed to create stream\n");
         return 1;
     }
@@ -50,7 +44,6 @@ int main() {
     }
 
     fluvio_c_stream_free(stream);
-    fluvio_c_consumer_free(consumer);
     fluvio_c_producer_free(producer);
     fluvio_c_client_free(client);
 

@@ -1,0 +1,57 @@
+name: CI E2E Auth
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  auth_e2e_matrix:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Install Core Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake g++ libssl-dev pkg-config openssl
+
+    - name: Install Fluvio Local Cluster
+      run: |
+        curl -fsS https://raw.githubusercontent.com/fluvio-community/fluvio/master/install.sh | FVM_VERSION=dev bash
+        echo "$HOME/.fluvio/bin" >> $GITHUB_PATH
+
+    - name: Generate mTLS Evaluation Certificates
+      run: |
+        mkdir -p /tmp/certs && cd /tmp/certs
+        openssl req -x509 -new -nodes -newkey rsa:2048 -keyout ca.key -out ca.crt -days 3650 -subj '/CN=fluvio-ca' -extensions v3_ca -config <(printf "[req]\ndistinguished_name=dn\n[dn]\n[v3_ca]\nbasicConstraints=CA:TRUE\nkeyUsage=keyCertSign,cRLSign")
+        openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj '/CN=localhost'
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=CA:FALSE\nextendedKeyUsage=serverAuth")
+        openssl req -new -newkey rsa:2048 -nodes -keyout client.key -out client.csr -subj '/CN=fluvio-client'
+        openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 365 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=CA:FALSE\nextendedKeyUsage=clientAuth")
+
+    - name: Start Authenticated Local TLS Cluster
+      run: |
+        fluvio cluster start --local --tls --server-cert /tmp/certs/server.crt --server-key /tmp/certs/server.key --client-cert /tmp/certs/client.crt --client-key /tmp/certs/client.key --ca-cert /tmp/certs/ca.crt --domain localhost
+
+    - name: Dynamically Build C++ Drivers representing E2E Target
+      run: |
+        cmake -B build
+        cmake --build build
+
+    - name: Execute Strict mTLS Validation Suite
+      run: |
+        export FLUVIO_E2E_TLS_DOMAIN="localhost"
+        export FLUVIO_E2E_TLS_KEY="/tmp/certs/client.key"
+        export FLUVIO_E2E_TLS_CERT="/tmp/certs/client.crt"
+        export FLUVIO_E2E_TLS_CA="/tmp/certs/ca.crt"
+        fluvio topic create test-auth-topic || true
+        cd build
+        ctest --output-on-failure -R fluvio_auth_test

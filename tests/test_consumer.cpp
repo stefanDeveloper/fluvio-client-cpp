@@ -8,9 +8,7 @@ int main() {
         auto client = fluvio_connect();
 
         std::cout << "Test: Creating stream for 'test-topic' partition 0..." << std::endl;
-        auto consumer = partition_consumer(*client, "test-topic", 0);
-        
-        auto stream = consumer_stream(*consumer, 0); // Offset::beginning()
+        auto stream = consumer_stream(*client, "test-topic", 0, 0); // Offset::beginning()
         
         std::cout << "Test: Fetching one record..." << std::endl;
         auto rec = stream_next(*stream);
