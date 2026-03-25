@@ -31,9 +31,9 @@ jobs:
     - name: Generate mTLS Evaluation Certificates
       run: |
         mkdir -p /tmp/certs && cd /tmp/certs
-        openssl req -x509 -new -nodes -newkey rsa:2048 -keyout ca.key -out ca.crt -days 3650 -subj '/CN=fluvio-ca'
+        openssl req -x509 -new -nodes -newkey rsa:2048 -keyout ca.key -out ca.crt -days 3650 -subj '/CN=fluvio-ca' -extensions v3_ca -config <(printf "[req]\ndistinguished_name=dn\n[dn]\n[v3_ca]\nbasicConstraints=CA:TRUE\nkeyUsage=keyCertSign,cRLSign")
         openssl req -new -newkey rsa:2048 -nodes -keyout server.key -out server.csr -subj '/CN=localhost'
-        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=CA:FALSE")
+        openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 365 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=CA:FALSE\nextendedKeyUsage=serverAuth")
         openssl req -new -newkey rsa:2048 -nodes -keyout client.key -out client.csr -subj '/CN=fluvio-client'
         openssl x509 -req -in client.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out client.crt -days 365 -extfile <(printf "subjectAltName=DNS:localhost,IP:127.0.0.1\nbasicConstraints=CA:FALSE\nextendedKeyUsage=clientAuth")
 
